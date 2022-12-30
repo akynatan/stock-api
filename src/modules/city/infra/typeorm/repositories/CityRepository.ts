@@ -12,14 +12,13 @@ export default class CitysRepository implements ICitysRepository {
     this.ormRepository = getRepository(City);
   }
 
-
   public async findAll(): Promise<City[]> {
     const city = await this.ormRepository.find();
     return city;
   }
 
   public async findByState(state_id: string): Promise<City[]> {
-    const city = await this.ormRepository.findOne({
+    const city = await this.ormRepository.find({
       where: {
         state_id,
       },

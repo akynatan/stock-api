@@ -21,14 +21,10 @@ productsRouter.post(
       name: Joi.string().required(),
       code: Joi.string().required(),
       description: Joi.string().allow(null, ''),
-      brand_id: Joi.string().allow(null).uuid(),
-      model_id: Joi.string().allow(null).uuid(),
-      category_id: Joi.string().allow(null).uuid(),
-      manufacturer_id: Joi.string().allow(null).uuid(),
-      new_brand: Joi.string().allow(null, ''),
-      new_model: Joi.string().allow(null, ''),
-      new_category: Joi.string().allow(null, ''),
-      new_manufacturer: Joi.string().allow(null, ''),
+      brand_id: Joi.string().required(),
+      model_id: Joi.string().required(),
+      category_id: Joi.string().required(),
+      manufacturer_id: Joi.string().required(),
       measure_unit: Joi.string()
         .allow(
           'T',

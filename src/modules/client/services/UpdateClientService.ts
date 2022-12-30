@@ -66,8 +66,6 @@ export default class UpdateClientService {
       document,
     );
 
-    console.log(clientAlreadExists?.id);
-    console.log(client_id);
     if (clientAlreadExists && clientAlreadExists.id !== client_id) {
       throw new AppError('Client alread exists with document');
     }
@@ -76,7 +74,7 @@ export default class UpdateClientService {
     client.document = document;
     client.tel = tel;
     client.tel2 = tel2;
-    client.city_id = city_id;
+    client.city = city;
     client.neighborhood = neighborhood;
     client.street = street;
     client.cep = cep;

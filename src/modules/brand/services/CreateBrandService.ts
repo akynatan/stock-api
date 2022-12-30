@@ -10,7 +10,7 @@ interface IRequest {
 }
 
 @injectable()
-export default class CreateProductService {
+export default class CreateBrandService {
   constructor(
     @inject('BrandRepository')
     private brandRepository: IBrandRepository,

@@ -1,4 +1,5 @@
 import { injectable, inject, container } from 'tsyringe';
+import { validate as isUUID } from 'uuid';
 
 import AppError from '@shared/errors/AppError';
 import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider';
@@ -18,14 +19,10 @@ interface IRequest {
   name: string;
   code: string;
   description?: string;
-  brand_id?: string;
-  model_id?: string;
-  category_id?: string;
-  manufacturer_id?: string;
-  new_brand?: string;
-  new_model?: string;
-  new_category?: string;
-  new_manufacturer?: string;
+  brand_id: string;
+  model_id: string;
+  category_id: string;
+  manufacturer_id: string;
   measure_unit:
     | 'T'
     | 'KG'
@@ -74,11 +71,7 @@ export default class CreateProductService {
     manufacturer_id,
     model_id,
     description,
-    new_brand,
-    new_category,
-    new_manufacturer,
     measure_unit,
-    new_model,
   }: IRequest): Promise<Product> {
     const createBrand = container.resolve(CreateBrandService);
     const createModel = container.resolve(CreateModelService);
@@ -95,10 +88,10 @@ export default class CreateProductService {
     }
 
     let brand;
-    if (!brand_id && new_brand) {
-      brand = await createBrand.execute({ name: new_brand });
-    } else if (brand_id) {
+    if (brand_id && isUUID(brand_id)) {
       brand = await this.brandRepository.findByID(brand_id);
+    } else {
+      brand = await createBrand.execute({ name: brand_id });
     }
 
     if (!brand) {
@@ -106,38 +99,39 @@ export default class CreateProductService {
     }
 
     let model;
-    if (!model_id && new_model) {
-      model = await createModel.execute({ name: new_model });
-    } else if (model_id) {
+    if (model_id && isUUID(model_id)) {
       model = await this.modelRepository.findByID(model_id);
+    } else {
+      model = await createModel.execute({ name: model_id });
     }
 
     if (!model) {
-      throw new AppError('Brand not found');
+      throw new AppError('Model not found');
     }
 
     let category;
-    if (!category_id && new_category) {
-      category = await createCategory.execute({ name: new_category });
-    } else if (category_id) {
+    if (category_id && isUUID(category_id)) {
       category = await this.categoryRepository.findByID(category_id);
+    } else {
+      category = await createCategory.execute({ name: category_id });
     }
+
     if (!category) {
-      throw new AppError('Brand not found');
+      throw new AppError('Category not found');
     }
 
     let manufacturer;
-    if (!manufacturer_id && new_manufacturer) {
-      manufacturer = await createManufacturer.execute({
-        name: new_manufacturer,
-      });
-    } else if (manufacturer_id) {
+    if (manufacturer_id && isUUID(manufacturer_id)) {
       manufacturer = await this.manufacturerRepository.findByID(
         manufacturer_id,
       );
+    } else {
+      manufacturer = await createManufacturer.execute({
+        name: manufacturer_id,
+      });
     }
     if (!manufacturer) {
-      throw new AppError('Brand not found');
+      throw new AppError('Manufacturer not found');
     }
 
     const product = await this.productsRepository.create({

@@ -10,7 +10,7 @@ interface IRequest {
 }
 
 @injectable()
-export default class CreateProductService {
+export default class CreateManufacturerService {
   constructor(
     @inject('ManufacturerRepository')
     private manufacturerRepository: IManufacturerRepository,

@@ -28,7 +28,7 @@ export default class ClientRepository implements IClientRepository {
   }
 
   public async findByID(id: string): Promise<Client | undefined> {
-    const client = this.ormRepository.findOne(id);
+    const client = this.ormRepository.findOne(id, { relations: ['city'] });
     return client;
   }
 

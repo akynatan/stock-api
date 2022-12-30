@@ -18,10 +18,6 @@ export default class ProductsController {
       model_id,
       category_id,
       manufacturer_id,
-      new_brand,
-      new_model,
-      new_category,
-      new_manufacturer,
       measure_unit,
     } = request.body;
 
@@ -35,10 +31,6 @@ export default class ProductsController {
       model_id,
       category_id,
       manufacturer_id,
-      new_brand,
-      new_model,
-      new_category,
-      new_manufacturer,
       measure_unit,
     });
 
