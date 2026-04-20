@@ -10,6 +10,7 @@ import CreateBrandService from '@modules/brand/services/CreateBrandService';
 import CreateModelService from '@modules/model/services/CreateModelService';
 import CreateCategoryService from '@modules/category/services/CreateCategoryService';
 import CreateManufacturerService from '@modules/manufacturer/services/CreateManufacturerService';
+import generateCode from '@shared/utils/generateCode';
 import Product from '../infra/typeorm/entities/Product';
 import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 import IProductsRepository from '../repositories/IProductsRepository';
@@ -17,7 +18,7 @@ import IProductsRepository from '../repositories/IProductsRepository';
 interface IRequest {
   product_id: string;
   name: string;
-  code: string;
+  code?: string;
   description?: string;
   brand_id?: string;
   model_id?: string;
@@ -93,8 +94,10 @@ export default class UpdateProductService {
       throw new AppError('Product not found.');
     }
 
+    const productCode = code || product.code || generateCode('PRD');
+
     const checkProductWithCodeExists = await this.productsRepository.findByCode(
-      code,
+      productCode,
       false,
     );
 
@@ -152,7 +155,7 @@ export default class UpdateProductService {
     }
 
     product.name = name;
-    product.code = code;
+    product.code = productCode;
     console.log(measure_unit);
     product.measure_unit = measure_unit;
     if (description) {

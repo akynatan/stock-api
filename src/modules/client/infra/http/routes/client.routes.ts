@@ -4,9 +4,11 @@ import { celebrate, Segments, Joi } from 'celebrate';
 
 import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
 import ClientController from '../controllers/ClientController';
+import ClientStatusController from '../controllers/ClientStatusController';
 
 const clientsRouter = Router();
 const clientController = new ClientController();
+const clientStatusController = new ClientStatusController();
 
 clientsRouter.use(ensureAuthenticated);
 
@@ -65,5 +67,11 @@ clientsRouter.get('/', clientController.index);
 clientsRouter.get('/:id', clientController.detail);
 
 clientsRouter.delete('/:id', clientController.delete);
+
+clientsRouter.patch(
+  '/:id/status',
+  ensureAuthenticated,
+  clientStatusController.update,
+);
 
 export default clientsRouter;

@@ -11,13 +11,14 @@ import CreateBrandService from '@modules/brand/services/CreateBrandService';
 import CreateModelService from '@modules/model/services/CreateModelService';
 import CreateCategoryService from '@modules/category/services/CreateCategoryService';
 import CreateManufacturerService from '@modules/manufacturer/services/CreateManufacturerService';
+import generateCode from '@shared/utils/generateCode';
 import Product from '../infra/typeorm/entities/Product';
 import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 import IProductsRepository from '../repositories/IProductsRepository';
 
 interface IRequest {
   name: string;
-  code: string;
+  code?: string;
   description?: string;
   brand_id: string;
   model_id: string;
@@ -78,8 +79,10 @@ export default class CreateProductService {
     const createCategory = container.resolve(CreateCategoryService);
     const createManufacturer = container.resolve(CreateManufacturerService);
 
+    const productCode = code || generateCode('PRD');
+
     const checkProductWithCodeExists = await this.productsRepository.findByCode(
-      code,
+      productCode,
       false,
     );
 
@@ -136,7 +139,7 @@ export default class CreateProductService {
 
     const product = await this.productsRepository.create({
       name,
-      code,
+      code: productCode,
       brand_id: brand.id,
       model_id: model.id,
       category_id: category.id,

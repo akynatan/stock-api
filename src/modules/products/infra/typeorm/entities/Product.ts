@@ -77,6 +77,12 @@ export default class Product {
     | 'DM'
     | 'MM';
 
+  @Column({ type: 'numeric', default: 0 })
+  current_stock: number;
+
+  @Column({ default: true })
+  active: boolean;
+
   // @OneToMany(
   //   () => ProductSupplier,
   //   product_supplier => product_supplier.products,

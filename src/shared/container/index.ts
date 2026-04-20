@@ -42,6 +42,9 @@ import IStateRepository from '@modules/state/repositories/IStateRepository';
 import ClientRepository from '@modules/client/infra/typeorm/repositories/ClientRepository';
 import IClientRepository from '@modules/client/repositories/IClientRepository';
 
+import IStockMovementsRepository from '@modules/stock_movements/repositories/IStockMovementsRepository';
+import StockMovementsRepository from '@modules/stock_movements/infra/typeorm/repositories/StockMovementsRepository';
+
 container.registerSingleton<ISuppliersRepository>(
   'SuppliersRepository',
   SuppliersRepository,
@@ -107,4 +110,9 @@ container.registerSingleton<IStateRepository>(
 container.registerSingleton<IClientRepository>(
   'ClientRepository',
   ClientRepository,
+);
+
+container.registerSingleton<IStockMovementsRepository>(
+  'StockMovementsRepository',
+  StockMovementsRepository,
 );

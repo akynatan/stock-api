@@ -4,6 +4,7 @@ import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider';
 import ICityRepository from '@modules/city/repositories/ICityRepository';
+import generateCode from '@shared/utils/generateCode';
 import Supplier from '../infra/typeorm/entities/Supplier';
 import ISuppliersRepository from '../repositories/ISuppliersRepository';
 
@@ -92,6 +93,7 @@ export default class CreateSupplierService {
       mail2,
       logo,
       note,
+      code: generateCode('FRN'),
     });
 
     await this.cacheProvider.invalidate(`suppliers-list`);

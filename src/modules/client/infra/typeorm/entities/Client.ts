@@ -18,6 +18,9 @@ export default class Client {
   @Column()
   name: string;
 
+  @Column({ nullable: true })
+  code: string;
+
   @Column()
   document: string;
 
@@ -50,6 +53,9 @@ export default class Client {
 
   @Column({ nullable: true })
   note: string;
+
+  @Column({ default: true })
+  active: boolean;
 
   @CreateDateColumn()
   created_at: Date;

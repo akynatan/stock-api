@@ -6,24 +6,35 @@ import IMailProvider from '../models/IMailProvider';
 
 @injectable()
 class EtherealMailProvider implements IMailProvider {
-  private client: Transporter;
+  private client: Transporter | undefined;
+
+  private initPromise: Promise<void> | undefined;
 
   constructor(
     @inject('MailTemplateProvider')
     private mailTemplateProvider: IMailTemplateProvider,
-  ) {
-    nodemailer.createTestAccount().then(account => {
-      const transporter = nodemailer.createTransport({
-        host: account.smtp.host,
-        port: account.smtp.port,
-        secure: account.smtp.secure,
-        auth: {
-          user: account.user,
-          pass: account.pass,
-        },
-      });
-      this.client = transporter;
-    });
+  ) {}
+
+  /** Evita promise solta no construtor (UnhandledRejection) e só fala com o Ethereal quando for enviar e-mail. */
+  private async ensureClient(): Promise<void> {
+    if (this.client) {
+      return;
+    }
+    if (!this.initPromise) {
+      this.initPromise = (async () => {
+        const account = await nodemailer.createTestAccount();
+        this.client = nodemailer.createTransport({
+          host: account.smtp.host,
+          port: account.smtp.port,
+          secure: account.smtp.secure,
+          auth: {
+            user: account.user,
+            pass: account.pass,
+          },
+        });
+      })();
+    }
+    await this.initPromise;
   }
 
   public async sendEmail({
@@ -32,7 +43,8 @@ class EtherealMailProvider implements IMailProvider {
     subject,
     templateData,
   }: ISendEmailDTO): Promise<void> {
-    const message = await this.client.sendMail({
+    await this.ensureClient();
+    const message = await this.client!.sendMail({
       from: {
         name: from?.name || 'Equipe TeamExcelsior',
         address: from?.email || 'noreply@excelsior2u.com',

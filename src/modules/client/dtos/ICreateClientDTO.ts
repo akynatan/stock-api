@@ -1,5 +1,6 @@
 export default interface ICreateClientDTO {
   name: string;
+  code?: string;
   document: string;
   tel?: string;
   tel2?: string;

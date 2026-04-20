@@ -3,6 +3,7 @@ import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider';
 import ICityRepository from '@modules/city/repositories/ICityRepository';
+import generateCode from '@shared/utils/generateCode';
 import Client from '../infra/typeorm/entities/Client';
 import IClientRepository from '../repositories/IClientRepository';
 
@@ -75,6 +76,7 @@ export default class CreateClientService {
       complement,
       mail,
       note,
+      code: generateCode('CLI'),
     });
 
     await this.cacheProvider.invalidate(`clients-list`);

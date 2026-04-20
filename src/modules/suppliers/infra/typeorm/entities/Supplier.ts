@@ -29,6 +29,9 @@ export default class Supplier {
   cnpj: string;
 
   @Column({ nullable: true })
+  code: string;
+
+  @Column({ nullable: true })
   tel: string;
 
   @Column({ nullable: true })

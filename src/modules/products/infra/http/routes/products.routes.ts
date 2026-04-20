@@ -6,11 +6,13 @@ import uploadConfig from '@config/upload';
 import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
 import ProductsController from '../controllers/ProductsController';
 import ProductImageController from '../controllers/ProductImageController';
+import ProductStatusController from '../controllers/ProductStatusController';
 
 const upload = multer(uploadConfig.multer);
 const productsRouter = Router();
 const productsController = new ProductsController();
 const productImageController = new ProductImageController();
+const productStatusController = new ProductStatusController();
 
 productsRouter.use(ensureAuthenticated);
 
@@ -19,7 +21,7 @@ productsRouter.post(
   celebrate({
     [Segments.BODY]: {
       name: Joi.string().required(),
-      code: Joi.string().required(),
+      code: Joi.string().allow(null, ''),
       description: Joi.string().allow(null, ''),
       brand_id: Joi.string().required(),
       model_id: Joi.string().required(),
@@ -93,6 +95,12 @@ productsRouter.patch(
   ensureAuthenticated,
   upload.single('image'),
   productImageController.update,
+);
+
+productsRouter.patch(
+  '/:id/status',
+  ensureAuthenticated,
+  productStatusController.update,
 );
 
 export default productsRouter;
