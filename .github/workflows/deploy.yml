@@ -18,7 +18,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            cd /home/${{ secrets.SERVER_USER }}/app/stock-api
+            cd /root/app/stock-api
             git pull origin master
             npm install --legacy-peer-deps
             npm typeorm migration:run
