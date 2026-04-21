@@ -1,5 +1,5 @@
 
-FROM node:14.17.1
+FROM node:24-alpine
 
 WORKDIR /usr/app
 
@@ -11,4 +11,4 @@ COPY . .
 
 EXPOSE 4444
 
-CMD ["yarn", "dev:server"]
+CMD ["npm", "run", "dev:server"]
