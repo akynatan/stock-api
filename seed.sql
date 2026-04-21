@@ -1,6 +1,7 @@
 -- Seed: Dados fake para desenvolvimento
 -- Executar direto no client do PostgreSQL
 -- Limpa dados existentes (ordem reversa por FK)
+-- Testando githubaction
 
 DELETE FROM stock_movements;
 DELETE FROM product;
