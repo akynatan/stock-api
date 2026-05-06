@@ -16,6 +16,7 @@ import cityRouter from '@modules/city/infra/http/routes/city.routes';
 import stateRouter from '@modules/state/infra/http/routes/state.routes';
 import clientRouter from '@modules/client/infra/http/routes/client.routes';
 import stockMovementsRouter from '@modules/stock_movements/infra/http/routes/stockMovements.routes';
+import dashboardRouter from '@modules/dashboard/infra/http/routes/dashboard.routes';
 
 const routes = Router();
 routes.use('/suppliers', suppliersRouter);
@@ -34,5 +35,6 @@ routes.use('/city', cityRouter);
 routes.use('/state', stateRouter);
 routes.use('/client', clientRouter);
 routes.use('/stock_movements', stockMovementsRouter);
+routes.use('/dashboard', dashboardRouter);
 
 export default routes;
