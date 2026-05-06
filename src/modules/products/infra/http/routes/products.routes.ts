@@ -53,7 +53,6 @@ productsRouter.put(
   celebrate({
     [Segments.BODY]: {
       name: Joi.string().required(),
-      code: Joi.string().required(),
       description: Joi.string().allow(null, ''),
       brand_id: Joi.string().allow(null).uuid(),
       model_id: Joi.string().allow(null).uuid(),

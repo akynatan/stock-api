@@ -101,7 +101,9 @@ export default class CreateStockMovementService {
           new_stock = currentStock - quantity;
 
           if (new_stock < 0) {
-            throw new AppError('Insufficient stock');
+            throw new AppError(
+              `Estoque insuficiente. Quantidade atual: ${currentStock}`,
+            );
           }
         }
 
