@@ -16,8 +16,8 @@ stockMovementsRouter.post(
   celebrate({
     [Segments.BODY]: {
       product_id: Joi.string().uuid().required(),
-      type: Joi.string().valid('entrada', 'saida').required(),
-      quantity: Joi.number().greater(0).required(),
+      type: Joi.string().valid('entrada', 'saida', 'ajuste').required(),
+      quantity: Joi.number().required(),
       reason: Joi.string().required(),
       supplier_id: Joi.string().uuid(),
       client_id: Joi.string().uuid(),

@@ -12,7 +12,7 @@ import StockMovement from '../infra/typeorm/entities/StockMovement';
 
 interface IRequest {
   product_id: string;
-  type: 'entrada' | 'saida';
+  type: 'entrada' | 'saida' | 'ajuste';
   quantity: number;
   reason: string;
   supplier_id?: string;
@@ -46,12 +46,16 @@ export default class CreateStockMovementService {
     supplier_id,
     client_id,
   }: IRequest): Promise<StockMovement> {
-    if (quantity <= 0) {
+    if (type !== 'ajuste' && quantity <= 0) {
       throw new AppError('Quantity must be greater than zero');
     }
 
-    if (type !== 'entrada' && type !== 'saida') {
-      throw new AppError('Type must be "entrada" or "saida"');
+    if (type === 'ajuste' && quantity === 0) {
+      throw new AppError('Quantity must not be zero for adjustments');
+    }
+
+    if (type !== 'entrada' && type !== 'saida' && type !== 'ajuste') {
+      throw new AppError('Type must be "entrada", "saida" or "ajuste"');
     }
 
     if (type === 'entrada') {
@@ -97,7 +101,7 @@ export default class CreateStockMovementService {
 
         if (type === 'entrada') {
           new_stock = currentStock + quantity;
-        } else {
+        } else if (type === 'saida') {
           new_stock = currentStock - quantity;
 
           if (new_stock < 0) {
@@ -105,12 +109,21 @@ export default class CreateStockMovementService {
               `Estoque insuficiente. Quantidade atual: ${currentStock}`,
             );
           }
+        } else {
+          // ajuste: quantity pode ser positiva (adicionar) ou negativa (remover)
+          new_stock = currentStock + quantity;
+
+          if (new_stock < 0) {
+            throw new AppError(
+              `Ajuste resultaria em estoque negativo. Quantidade atual: ${currentStock}`,
+            );
+          }
         }
 
         const movement = transactionalEntityManager.create(StockMovement, {
           product_id,
           type,
-          quantity,
+          quantity: Math.abs(quantity),
           reason,
           supplier_id: type === 'entrada' ? supplier_id : undefined,
           client_id: type === 'saida' ? client_id : undefined,
