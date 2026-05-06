@@ -50,8 +50,8 @@ export default class CreateStockMovementService {
       throw new AppError('Quantity must be greater than zero');
     }
 
-    if (type === 'ajuste' && quantity === 0) {
-      throw new AppError('Quantity must not be zero for adjustments');
+    if (type === 'ajuste' && quantity < 0) {
+      throw new AppError('O estoque não pode ser negativo');
     }
 
     if (type !== 'entrada' && type !== 'saida' && type !== 'ajuste') {
@@ -110,14 +110,32 @@ export default class CreateStockMovementService {
             );
           }
         } else {
-          // ajuste: quantity pode ser positiva (adicionar) ou negativa (remover)
-          new_stock = currentStock + quantity;
+          // ajuste: quantity é o estoque real (contagem física)
+          // calcula a diferença e registra como entrada ou saída
+          const difference = quantity - currentStock;
+          new_stock = quantity;
 
           if (new_stock < 0) {
             throw new AppError(
-              `Ajuste resultaria em estoque negativo. Quantidade atual: ${currentStock}`,
+              `O estoque não pode ser negativo.`,
             );
           }
+
+          // Salva a diferença absoluta como quantity na movimentação
+          const movement = transactionalEntityManager.create(StockMovement, {
+            product_id,
+            type: difference >= 0 ? 'entrada' : 'saida',
+            quantity: Math.abs(difference),
+            reason,
+            stock_after: new_stock,
+          });
+
+          await transactionalEntityManager.save(movement);
+
+          product.current_stock = new_stock;
+          await transactionalEntityManager.save(product);
+
+          return movement;
         }
 
         const movement = transactionalEntityManager.create(StockMovement, {

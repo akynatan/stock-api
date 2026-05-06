@@ -17,7 +17,7 @@ stockMovementsRouter.post(
     [Segments.BODY]: {
       product_id: Joi.string().uuid().required(),
       type: Joi.string().valid('entrada', 'saida', 'ajuste').required(),
-      quantity: Joi.number().required(),
+      quantity: Joi.number().min(0).required(),
       reason: Joi.string().required(),
       supplier_id: Joi.string().uuid(),
       client_id: Joi.string().uuid(),
