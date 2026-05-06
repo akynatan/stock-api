@@ -16,13 +16,13 @@ export default class EntriesBySupplierService {
     const result = await this.ormRepository
       .createQueryBuilder('sm')
       .select('sm.supplier_id', 'supplier_id')
-      .addSelect('supplier.name', 'supplier_name')
+      .addSelect('supplier.name_fantasy', 'supplier_name')
       .addSelect('COUNT(*)', 'total_movements')
       .leftJoin('sm.supplier', 'supplier')
       .where("sm.type = 'entrada'")
       .andWhere('sm.supplier_id IS NOT NULL')
       .groupBy('sm.supplier_id')
-      .addGroupBy('supplier.name')
+      .addGroupBy('supplier.name_fantasy')
       .getRawMany();
 
     const entriesBySupplier: IEntriesBySupplierDTO[] = result.map(row => ({
